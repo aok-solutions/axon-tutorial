@@ -5,6 +5,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.SimpleEventBus;
+import org.axonframework.eventhandling.annotation.AnnotationEventListenerAdapter;
 import org.axonframework.eventsourcing.EventSourcingRepository;
 import org.axonframework.eventstore.EventStore;
 import org.axonframework.eventstore.fs.FileSystemEventStore;
@@ -24,6 +25,7 @@ public class ToDoItemRunner {
         repository.setEventBus(eventBus);
 
         AggregateAnnotationCommandHandler.subscribe(ToDoItem.class, repository, commandBus);
+        AnnotationEventListenerAdapter.subscribe(new ToDoEventHandler(), eventBus);
 
         final String itemId = UUID.randomUUID().toString();
         commandGateway.send(new CreateToDoItemCommand(itemId, "Need to do this"));
